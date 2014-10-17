@@ -20,6 +20,7 @@
 package org.sonar.plugins.scala.sensor;
 
 import org.sonar.api.batch.Sensor;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.scala.language.Scala;
 
@@ -32,8 +33,10 @@ import org.sonar.plugins.scala.language.Scala;
 public abstract class AbstractScalaSensor implements Sensor {
 
   private final Scala scala;
+  protected final FileSystem fileSystem;
 
-  protected AbstractScalaSensor(Scala scala) {
+  protected AbstractScalaSensor(FileSystem fileSystem, Scala scala) {
+    this.fileSystem = fileSystem;
     this.scala = scala;
   }
 

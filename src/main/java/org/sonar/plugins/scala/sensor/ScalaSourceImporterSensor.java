@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.Phase.Name;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.InputFile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
@@ -44,8 +45,8 @@ public class ScalaSourceImporterSensor extends AbstractScalaSensor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScalaSourceImporterSensor.class);
 
-  public ScalaSourceImporterSensor(Scala scala) {
-    super(scala);
+  public ScalaSourceImporterSensor(FileSystem fileSystem, Scala scala) {
+    super(fileSystem, scala);
   }
 
   public void analyse(Project project, SensorContext sensorContext) {

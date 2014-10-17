@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
@@ -39,7 +40,7 @@ public class AbstractScalaSensorTest {
 
   @Before
   public void setUp() {
-    abstractScalaSensor = new AbstractScalaSensor(Scala.INSTANCE) {
+    abstractScalaSensor = new AbstractScalaSensor(mock(FileSystem.class), Scala.INSTANCE) {
 
       public void analyse(Project project, SensorContext context) {
         // dummy implementation, never called in this test

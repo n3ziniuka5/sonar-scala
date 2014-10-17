@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.InputFile;
 import org.sonar.api.resources.Project;
@@ -58,8 +59,8 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BaseMetricsSensor.class);
 
-  public BaseMetricsSensor(Scala scala) {
-    super(scala);
+  public BaseMetricsSensor(FileSystem fileSystem, Scala scala) {
+    super(fileSystem, scala);
   }
 
   public void analyse(Project project, SensorContext sensorContext) {
