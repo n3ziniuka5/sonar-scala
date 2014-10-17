@@ -34,7 +34,7 @@ import org.sonar.api.utils.WildcardPattern;
  * @author Felix Müller
  * @since 0.1
  */
-public class ScalaFile extends Resource<ScalaPackage> {
+public class ScalaFile extends Resource {
 
   private final boolean isUnitTest;
   private final String filename;

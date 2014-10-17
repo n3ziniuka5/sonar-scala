@@ -22,6 +22,7 @@ package org.sonar.plugins.scala.sensor;
 import com.google.common.collect.Sets;
 import org.sonar.api.batch.Event;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.design.Dependency;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.MeasuresFilter;
@@ -30,6 +31,11 @@ import org.sonar.api.resources.ProjectLink;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rules.Violation;
 
+import javax.annotation.CheckForNull;
+import java.io.Serializable;
+import java.lang.Deprecated;
+import java.lang.Double;
+import java.lang.Override;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -49,112 +55,132 @@ class FakeSensorContext implements SensorContext {
     resources.add(reference);
   }
 
-  public boolean index(Resource resource) {
-    return false;
-  }
+  @Deprecated
+  public boolean index(Resource resource) { return false; }
 
+  @Deprecated
   public boolean index(Resource resource, Resource parentReference) {
     return false;
   }
 
+  @Deprecated
   public boolean isExcluded(Resource reference) {
     return false;
   }
 
+  @Deprecated
   public boolean isIndexed(Resource reference, boolean acceptExcluded) {
     return false;
   }
 
+  @Override
   public <R extends Resource> R getResource(R reference) {
     return null;
   }
 
+  @Override
   public Resource getParent(Resource reference) {
     return null;
   }
 
+  @Override
   public Collection<Resource> getChildren(Resource reference) {
     return null;
   }
 
-  public Measure getMeasure(Metric metric) {
-    return null;
-  }
+  @Override
+  public <G extends Serializable> Measure<G> getMeasure(Metric<G> metric) { return null; }
 
+  @Override
   public <M> M getMeasures(MeasuresFilter<M> filter) {
     return null;
   }
 
+  @Override
   public Measure saveMeasure(Measure measure) {
     return null;
   }
 
+  @Override
   public Measure saveMeasure(Metric metric, Double value) {
     return null;
   }
 
-  public Measure getMeasure(Resource resource, Metric metric) {
+  @Override
+  public <G extends Serializable> Measure<G> getMeasure(Resource resource, Metric<G> metric) {
     return null;
   }
 
+  @Deprecated
   public String saveResource(Resource resource) {
     return null;
   }
 
+  @Override
   public <M> M getMeasures(Resource resource, MeasuresFilter<M> filter) {
     return null;
   }
 
+  @Override
   public Measure saveMeasure(Resource resource, Metric metric, Double value) {
     return null;
   }
 
+  @Override
   public Measure saveMeasure(Resource resource, Measure measure) {
     return null;
   }
 
-  public void saveViolation(Violation violation, boolean force) {
+  @Deprecated
+  public void saveViolation(Violation violation, boolean force) { }
 
-  }
+  @Deprecated
+  public void saveViolation(Violation violation) { }
 
-  public void saveViolation(Violation violation) {
+  @Deprecated
+  public void saveViolations(Collection<Violation> violations) { }
 
-  }
-
-  public void saveViolations(Collection<Violation> violations) {
-
-  }
-
+  @Override
   public Dependency saveDependency(Dependency dependency) {
     return null;
   }
 
+  @Override
   public Set<Dependency> getDependencies() {
     return null;
   }
 
+  @Override
   public Collection<Dependency> getIncomingDependencies(Resource to) {
     return null;
   }
 
+  @Override
   public Collection<Dependency> getOutgoingDependencies(Resource from) {
     return null;
   }
 
-  public void saveLink(ProjectLink link) {
-  }
+  @Override
+  public void saveLink(ProjectLink link) { }
 
-  public void deleteLink(String key) {
-  }
+  @Override
+  public void deleteLink(String key) { }
 
+  @Override
   public List<Event> getEvents(Resource resource) {
     return null;
   }
 
-  public Event createEvent(Resource resource, String name, String description, String category, Date date) {
-    return null;
-  }
+  @Override
+  public Event createEvent(Resource resource, String name, String description, String category, Date date) { return null; }
 
-  public void deleteEvent(Event event) {
-  }
+  @Override
+  public void deleteEvent(Event event) { }
+
+  @Override
+  public Measure saveMeasure(InputFile inputFile, Metric metric, Double aDouble) { return null;}
+
+  @Override
+  public Measure saveMeasure(InputFile inputFile, Measure measure) { return null; }
+
 }

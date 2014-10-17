@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.codehaus.sonar-plugins</groupId>
     <artifactId>parent</artifactId>
-    <version>16</version>
+    <version>18</version>
   </parent>
 
   <artifactId>sonar-scala-plugin</artifactId>
@@ -38,7 +38,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>3.0</sonar.version>
+    <sonar.version>4.5</sonar.version>
     <sonar.pluginKey>scala</sonar.pluginKey>
     <sonar.pluginName>Scala</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.scala.ScalaPlugin</sonar.pluginClass>
@@ -46,7 +46,8 @@
     <scala.version>2.10.4</scala.version>
     <scala.major.version>2.10</scala.major.version>
 
-      <sonar.language>scala</sonar.language>
+    <sonar-java.version>2.4</sonar-java.version>
+    <sonar.language>scala</sonar.language>
   </properties>
 
   <dependencies>
@@ -76,6 +77,11 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.sonar-plugins.java</groupId>
+      <artifactId>sonar-java-plugin</artifactId>
+      <version>${sonar-java.version}</version>
+    </dependency>
 
     <!-- unit tests -->
     <dependency>
@@ -100,6 +106,11 @@
       <artifactId>maven-project</artifactId>
       <version>2.2.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>1.10.8</version>
     </dependency>
   </dependencies>
 

@@ -54,7 +54,7 @@ object ComplexityCalculator {
         functionComplexityRanges, classOf[FunDefOrDcl])
   }
 
-  private def measureComplexityDistribution(source: String, metric: Metric, ranges: Array[Number],
+  private def measureComplexityDistribution(source: String, metric: Metric[String], ranges: Array[Number],
       typeOfTree: Class[_ <: AstNode]) = {
 
     def allTreesIn(source: String) : Seq[AstNode] = ScalaParser.parse(source) match {

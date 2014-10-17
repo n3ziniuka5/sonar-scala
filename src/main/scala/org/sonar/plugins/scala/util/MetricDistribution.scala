@@ -23,7 +23,7 @@ import collection.immutable.TreeMap
 
 import org.sonar.api.measures.{ Metric, RangeDistributionBuilder }
 
-class MetricDistribution(metric: Metric, ranges: Array[Number]) {
+class MetricDistribution(metric: Metric[String], ranges: Array[Number]) {
 
   var distribution = TreeMap[Double, Int]()
 

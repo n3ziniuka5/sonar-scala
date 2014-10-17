@@ -25,9 +25,9 @@ import org.mockito.InOrder;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.resources.InputFile;
 import org.sonar.api.resources.InputFileUtils;
-import org.sonar.api.resources.Java;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
+import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.util.FileTestUtils;
 
@@ -104,7 +104,7 @@ public class ScalaSourceImporterSensorTest {
   @Test
   public void shouldImportAllScalaFilesAndNotFilesOfOtherLanguages() {
     when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(3));
-    when(fileSystem.mainFiles(Java.INSTANCE.getKey()))
+    when(fileSystem.mainFiles(Java.KEY))
         .thenReturn(FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaMainFile", "java", 1));
     when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
 
@@ -172,7 +172,7 @@ public class ScalaSourceImporterSensorTest {
   @Test
   public void shouldImportAllScalaTestFilesAndNotTestFilesOfOtherLanguages() {
     when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(Java.INSTANCE.getKey()))
+    when(fileSystem.testFiles(Java.KEY))
         .thenReturn(FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaTestFile", "java", 1));
     when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(3));
 

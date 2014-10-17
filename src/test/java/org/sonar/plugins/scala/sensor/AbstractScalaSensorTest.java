@@ -29,8 +29,8 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.resources.Java;
 import org.sonar.api.resources.Project;
+import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
 
 public class AbstractScalaSensorTest {
@@ -52,7 +52,8 @@ public class AbstractScalaSensorTest {
     Project scalaProject = mock(Project.class);
     when(scalaProject.getLanguage()).thenReturn(Scala.INSTANCE);
     Project javaProject = mock(Project.class);
-    when(javaProject.getLanguage()).thenReturn(Java.INSTANCE);
+    Java javaInstance = mock(Java.class);
+    when(javaProject.getLanguage()).thenReturn(javaInstance);
 
     assertTrue(abstractScalaSensor.shouldExecuteOnProject(scalaProject));
     assertFalse(abstractScalaSensor.shouldExecuteOnProject(javaProject));
