@@ -28,7 +28,6 @@ import org.sonar.plugins.scala.colorization.ScalaColorizerFormat;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.sensor.BaseMetricsSensor;
 import org.sonar.plugins.scala.sensor.ScalaSourceImporterSensor;
-import org.sonar.plugins.scala.surefire.SurefireSensor;
 
 /**
  * This class is the entry point for all extensions made by the
@@ -46,7 +45,6 @@ public class ScalaPlugin extends SonarPlugin {
     extensions.add(ScalaColorizerFormat.class);
     extensions.add(BaseMetricsSensor.class);
     extensions.add(ScalaDefaultProfile.class);
-    extensions.add(SurefireSensor.class);
 
     return extensions;
   }
