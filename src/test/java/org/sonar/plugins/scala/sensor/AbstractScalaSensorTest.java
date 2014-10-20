@@ -30,18 +30,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
+import org.sonar.plugins.scala.util.FileTestUtils;
 
 public class AbstractScalaSensorTest {
 
   private AbstractScalaSensor abstractScalaSensor;
 
+  private FileSystem fileSystem;
+
   @Before
   public void setUp() {
-    abstractScalaSensor = new AbstractScalaSensor(mock(FileSystem.class), new Scala()) {
+    fileSystem = new DefaultFileSystem();
+    abstractScalaSensor = new AbstractScalaSensor(fileSystem, new Scala()) {
 
       public void analyse(Project project, SensorContext context) {
         // dummy implementation, never called in this test
@@ -50,13 +55,16 @@ public class AbstractScalaSensorTest {
   }
 
   @Test
-  public void shouldOnlyExecuteOnScalaProjects() {
+  public void shouldExecuteOnScalaProjects() {
     Project scalaProject = mock(Project.class);
-    when(scalaProject.getLanguage()).thenReturn(new Scala());
-    Project javaProject = mock(Project.class);
-    when(javaProject.getLanguage()).thenReturn(new Java(mock(Settings.class)));
+    FileTestUtils.addMainFiles(fileSystem, FileTestUtils.getInputFiles("/scalaSourceImporter/", "MainFile", "scala", 1));
 
     assertTrue(abstractScalaSensor.shouldExecuteOnProject(scalaProject));
+  }
+  @Test
+  public void shouldNotExecuteOnJavaProjects() {
+    Project javaProject = mock(Project.class);
+    FileTestUtils.addMainFiles(fileSystem, FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaMainFile", "java", 1));
     assertFalse(abstractScalaSensor.shouldExecuteOnProject(javaProject));
   }
 
