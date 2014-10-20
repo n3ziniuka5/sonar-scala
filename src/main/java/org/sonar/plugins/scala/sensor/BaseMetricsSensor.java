@@ -118,8 +118,6 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
       CommentsAnalyzer commentsAnalyzer) {
     sensorContext.saveMeasure(scalaFile, CoreMetrics.COMMENT_LINES,
         (double) commentsAnalyzer.countCommentLines());
-    sensorContext.saveMeasure(scalaFile, CoreMetrics.COMMENTED_OUT_CODE_LINES,
-        (double) commentsAnalyzer.countCommentedOutLinesOfCode());
   }
 
   private void addCodeMetrics(SensorContext sensorContext, ScalaFile scalaFile, String source) {

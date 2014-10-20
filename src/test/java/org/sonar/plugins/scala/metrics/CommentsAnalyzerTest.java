@@ -55,16 +55,6 @@ public class CommentsAnalyzerTest {
   }
 
   @Test
-  public void shouldCountAllCommentedOutLinesOfCode() throws IOException {
-    List<String> comments = Arrays.asList(
-        "// val a = 12",
-        "/* list.foreach(println(_))\r\n* def inc(x: Int) = x + 1 */",
-        "// this a normal comment");
-    CommentsAnalyzer commentAnalyzer = new CommentsAnalyzer(asCommentList(comments, CommentType.NORMAL));
-    assertThat(commentAnalyzer.countCommentedOutLinesOfCode(), is(3));
-  }
-
-  @Test
   public void shouldCountZeroCommentLinesForEmptyCommentsList() {
     CommentsAnalyzer commentAnalyzer = new CommentsAnalyzer(Collections.<Comment>emptyList());
     assertThat(commentAnalyzer.countCommentLines(), is(0));
@@ -74,12 +64,6 @@ public class CommentsAnalyzerTest {
   public void shouldCountZeroHeaderCommentLinesForEmptyCommentsList() {
     CommentsAnalyzer commentAnalyzer = new CommentsAnalyzer(Collections.<Comment>emptyList());
     assertThat(commentAnalyzer.countHeaderCommentLines(), is(0));
-  }
-
-  @Test
-  public void shouldCountZeroCommentedOutLinesOfCodeForEmptyCommentsList() {
-    CommentsAnalyzer commentAnalyzer = new CommentsAnalyzer(Collections.<Comment>emptyList());
-    assertThat(commentAnalyzer.countCommentedOutLinesOfCode(), is(0));
   }
 
   private List<Comment> asCommentList(List<String> commentsContent, CommentType type) throws IOException {

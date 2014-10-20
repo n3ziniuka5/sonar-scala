@@ -58,14 +58,6 @@ public class CommentsAnalyzer {
     return headerCommentLines;
   }
 
-  public int countCommentedOutLinesOfCode() {
-    int commentedOutLinesOfCode = 0;
-    for (Comment comment : comments) {
-      commentedOutLinesOfCode += comment.getNumberOfCommentedOutLinesOfCode();
-    }
-    return commentedOutLinesOfCode;
-  }
-
   public int countBlankCommentLines() {
     int blankCommentLines = 0;
     for (Comment comment : comments) {

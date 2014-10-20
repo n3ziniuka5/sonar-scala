@@ -132,14 +132,12 @@ public class BaseMetricsSensorTest {
   public void shouldMeasureCommentMetricsForOneScalaFile() {
     analyseOneScalaFile();
     verifyMeasuring(CoreMetrics.COMMENT_LINES);
-    verifyMeasuring(CoreMetrics.COMMENTED_OUT_CODE_LINES);
   }
 
   @Test
   public void shouldMeasureCommentMetricsForAllScalaFiles() {
     analyseAllScalaFiles();
     verifyMeasuring(CoreMetrics.COMMENT_LINES, NUMBER_OF_FILES);
-    verifyMeasuring(CoreMetrics.COMMENTED_OUT_CODE_LINES, NUMBER_OF_FILES);
   }
 
   @Test
