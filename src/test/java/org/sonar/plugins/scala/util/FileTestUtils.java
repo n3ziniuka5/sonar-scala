@@ -73,7 +73,7 @@ public final class FileTestUtils {
       String relativePath = baseDir.getPath() + '/' + relativeFilePath;
       DefaultInputFile inputFile = new DefaultInputFile(relativePath);
       inputFile.setAbsolutePath(baseDir.getAbsolutePath() + '/' + relativeFilePath);
-      inputFile.setLanguage(Scala.INSTANCE.getKey());
+      inputFile.setLanguage(Scala.KEY);
       inputFile.setType(testFile ? InputFile.Type.TEST : InputFile.Type.MAIN);
       return inputFile;
   }

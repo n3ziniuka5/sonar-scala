@@ -29,13 +29,15 @@ import org.sonar.api.resources.AbstractLanguage;
  */
 public class Scala extends AbstractLanguage {
 
-  public static final Scala INSTANCE = new Scala();
+  public static final String KEY = "scala";
+  public static final String NAME = "Scala";
+  public static final String[] FILE_SUFFIXES = {"scala"};
 
   public Scala() {
-    super("scala", "Scala");
+    super(KEY, NAME);
   }
 
   public String[] getFileSuffixes() {
-    return new String[] { "scala" };
+    return FILE_SUFFIXES;
   }
 }

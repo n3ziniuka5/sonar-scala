@@ -50,7 +50,7 @@ public class ScalaSourceImporterSensorTest {
   @Before
   public void setUp() {
     fileSystem = new DefaultFileSystem();
-    scalaSourceImporter = new ScalaSourceImporterSensor(fileSystem, Scala.INSTANCE);
+    scalaSourceImporter = new ScalaSourceImporterSensor(fileSystem, mock(Scala.class));
     project = mock(Project.class);
     sensorContext = spy(new FakeSensorContext());
   }

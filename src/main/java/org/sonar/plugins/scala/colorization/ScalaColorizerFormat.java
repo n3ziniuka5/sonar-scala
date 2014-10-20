@@ -52,7 +52,7 @@ public class ScalaColorizerFormat extends CodeColorizerFormat {
       new JavaAnnotationTokenizer("<span class=\"a\">", END_SPAN_TAG));
 
   public ScalaColorizerFormat() {
-    super(Scala.INSTANCE.getKey());
+    super(Scala.KEY);
   }
 
   @Override

@@ -52,11 +52,11 @@ public class ScalaSourceImporterSensor extends AbstractScalaSensor {
   public void analyse(Project project, SensorContext sensorContext) {
     String charset = fileSystem.encoding().toString();
     FilePredicates p = fileSystem.predicates();
-    for (InputFile sourceFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey()), p.hasType(InputFile.Type.MAIN)))) {
+    for (InputFile sourceFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.KEY), p.hasType(InputFile.Type.MAIN)))) {
       addFileToSonar(sensorContext, sourceFile, false, charset);
     }
 
-    for (InputFile testFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey()), p.hasType(InputFile.Type.TEST)))) {
+    for (InputFile testFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.KEY), p.hasType(InputFile.Type.TEST)))) {
       addFileToSonar(sensorContext, testFile, true, charset);
     }
   }

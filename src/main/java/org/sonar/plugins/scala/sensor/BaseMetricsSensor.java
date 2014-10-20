@@ -71,7 +71,7 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
     MetricDistribution complexityOfFunctions = null;
 
     FilePredicates p = fileSystem.predicates();
-    for (InputFile inputFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey())))) {
+    for (InputFile inputFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.KEY)))) {
       final ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile);
       packages.add(scalaFile.getParent());
       sensorContext.saveMeasure(scalaFile, CoreMetrics.FILES, 1.0);

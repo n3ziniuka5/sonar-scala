@@ -55,7 +55,7 @@ public class BaseMetricsSensorTest {
   @Before
   public void setUp() {
     fileSystem = new DefaultFileSystem();
-    baseMetricsSensor = new BaseMetricsSensor(fileSystem, Scala.INSTANCE);
+    baseMetricsSensor = new BaseMetricsSensor(fileSystem, mock(Scala.class));
     project = mock(Project.class);
     sensorContext = mock(SensorContext.class);
   }

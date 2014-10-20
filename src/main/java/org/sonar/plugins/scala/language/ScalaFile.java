@@ -77,7 +77,7 @@ public class ScalaFile extends Resource {
 
   @Override
   public Language getLanguage() {
-    return Scala.INSTANCE;
+    return new Scala();
   }
 
   @Override

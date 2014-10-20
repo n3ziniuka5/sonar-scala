@@ -54,7 +54,7 @@ public class ScalaFileTest {
     InputFile inputFile = Iterables.get(FileTestUtils.getInputFiles("/scalaFile/", "ScalaFile", 1), 0);
     ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile);
 
-    assertThat(scalaFile.getLanguage().getKey(), is(Scala.INSTANCE.getKey()));
+    assertThat(scalaFile.getLanguage().getKey(), is(Scala.KEY));
     assertThat(scalaFile.getName(), is("ScalaFile1"));
     assertThat(scalaFile.getLongName(), is("scalaFile.ScalaFile1"));
     assertThat(scalaFile.getParent().getName(), is("scalaFile"));
@@ -66,7 +66,7 @@ public class ScalaFileTest {
     InputFile inputFile = Iterables.get(FileTestUtils.getInputFiles("/scalaFile/", "ScalaTestFile", 1), 0);
     ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile, true);
 
-    assertThat(scalaFile.getLanguage().getKey(), is(Scala.INSTANCE.getKey()));
+    assertThat(scalaFile.getLanguage().getKey(), is(Scala.KEY));
     assertThat(scalaFile.getName(), is("ScalaTestFile1"));
     assertThat(scalaFile.getLongName(), is("scalaFile.ScalaTestFile1"));
     assertThat(scalaFile.getParent().getName(), is("scalaFile"));

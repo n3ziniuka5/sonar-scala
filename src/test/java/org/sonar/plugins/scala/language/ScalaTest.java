@@ -30,19 +30,19 @@ public class ScalaTest {
   @Test
   public void shouldHaveScalaLanguageKey() {
     assertThat(new Scala().getKey(), equalTo("scala"));
-    assertThat(Scala.INSTANCE.getKey(), equalTo("scala"));
+    assertThat(Scala.KEY, equalTo("scala"));
   }
 
   @Test
   public void shouldHaveScalaLanguageName() {
     assertThat(new Scala().getName(), equalTo("Scala"));
-    assertThat(Scala.INSTANCE.getName(), equalTo("Scala"));
+    assertThat(Scala.NAME, equalTo("Scala"));
   }
 
   @Test
   public void shouldHaveScalaFileSuffixes() {
     String[] suffixes = new String[] { "scala" };
     assertArrayEquals(new Scala().getFileSuffixes(), suffixes);
-    assertArrayEquals(Scala.INSTANCE.getFileSuffixes(), suffixes);
+    assertArrayEquals(Scala.FILE_SUFFIXES, suffixes);
   }
 }

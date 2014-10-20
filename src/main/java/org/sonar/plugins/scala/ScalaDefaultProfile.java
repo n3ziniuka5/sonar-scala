@@ -41,6 +41,6 @@ public class ScalaDefaultProfile extends ProfileDefinition {
 
   @Override
   public RulesProfile createProfile(ValidationMessages messages) {
-    return annotationProfileParser.parse(Scala.INSTANCE.getKey(), "sonar", Scala.INSTANCE.getKey(), Collections.EMPTY_LIST, messages);
+    return annotationProfileParser.parse(Scala.KEY, "sonar", Scala.KEY, Collections.EMPTY_LIST, messages);
   }
 }

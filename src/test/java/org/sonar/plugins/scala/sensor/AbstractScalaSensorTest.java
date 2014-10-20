@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
@@ -40,7 +41,7 @@ public class AbstractScalaSensorTest {
 
   @Before
   public void setUp() {
-    abstractScalaSensor = new AbstractScalaSensor(mock(FileSystem.class), Scala.INSTANCE) {
+    abstractScalaSensor = new AbstractScalaSensor(mock(FileSystem.class), new Scala()) {
 
       public void analyse(Project project, SensorContext context) {
         // dummy implementation, never called in this test
@@ -51,10 +52,9 @@ public class AbstractScalaSensorTest {
   @Test
   public void shouldOnlyExecuteOnScalaProjects() {
     Project scalaProject = mock(Project.class);
-    when(scalaProject.getLanguage()).thenReturn(Scala.INSTANCE);
+    when(scalaProject.getLanguage()).thenReturn(new Scala());
     Project javaProject = mock(Project.class);
-    Java javaInstance = mock(Java.class);
-    when(javaProject.getLanguage()).thenReturn(javaInstance);
+    when(javaProject.getLanguage()).thenReturn(new Java(mock(Settings.class)));
 
     assertTrue(abstractScalaSensor.shouldExecuteOnProject(scalaProject));
     assertFalse(abstractScalaSensor.shouldExecuteOnProject(javaProject));

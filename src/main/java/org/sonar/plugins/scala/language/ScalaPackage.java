@@ -60,7 +60,7 @@ public class ScalaPackage extends Resource {
 
   @Override
   public Language getLanguage() {
-    return Scala.INSTANCE;
+    return new Scala();
   }
 
   @Override
