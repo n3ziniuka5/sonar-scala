@@ -21,7 +21,7 @@ package org.sonar.plugins.scala.language;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.sonar.api.resources.InputFile;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
@@ -121,11 +121,11 @@ public class ScalaFile extends Resource {
    * @return the {@link ScalaFile} created if exists, null otherwise
    */
   public static ScalaFile fromInputFile(InputFile inputFile, boolean isUnitTest) {
-    if (inputFile == null || inputFile.getFile() == null || inputFile.getRelativePath() == null) {
+    if (inputFile == null || inputFile.file() == null || inputFile.relativePath() == null) {
       return null;
     }
 
-    String packageName = PackageResolver.resolvePackageNameOfFile(inputFile.getFile().getAbsolutePath());
+    String packageName = PackageResolver.resolvePackageNameOfFile(inputFile.file().getAbsolutePath());
     String className = resolveClassName(inputFile);
 
     if (isPackageObjectInFirstLevelPackage(packageName, className)) {
@@ -141,15 +141,15 @@ public class ScalaFile extends Resource {
   }
 
   private static String extractLastFolderName(InputFile inputFile) {
-    String absolutePath = inputFile.getFile().getAbsolutePath();
+    String absolutePath = inputFile.file().getAbsolutePath();
     int lastPathSeparator = absolutePath.lastIndexOf("/");
     return absolutePath.substring(absolutePath.lastIndexOf("/", lastPathSeparator - 1) + 1, lastPathSeparator);
   }
 
   private static String resolveClassName(InputFile inputFile) {
-    String classname = inputFile.getRelativePath();
-    if (inputFile.getRelativePath().indexOf('/') >= 0) {
-      classname = StringUtils.substringAfterLast(inputFile.getRelativePath(), "/");
+    String classname = inputFile.relativePath();
+    if (inputFile.relativePath().indexOf('/') >= 0) {
+      classname = StringUtils.substringAfterLast(inputFile.relativePath(), "/");
     }
     return StringUtils.substringBeforeLast(classname, ".");
   }

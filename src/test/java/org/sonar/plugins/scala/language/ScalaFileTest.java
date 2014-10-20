@@ -19,9 +19,10 @@
  */
 package org.sonar.plugins.scala.language;
 
+import com.google.common.collect.Iterables;
+
 import org.junit.Test;
-import org.sonar.api.resources.InputFile;
-import org.sonar.api.resources.InputFileUtils;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.resources.Qualifiers;
 import org.sonar.plugins.scala.util.FileTestUtils;
 
@@ -50,7 +51,7 @@ public class ScalaFileTest {
 
   @Test
   public void shouldCreateScalaFileWithCorrectAttributes() {
-    InputFile inputFile = FileTestUtils.getInputFiles("/scalaFile/", "ScalaFile", 1).get(0);
+    InputFile inputFile = Iterables.get(FileTestUtils.getInputFiles("/scalaFile/", "ScalaFile", 1), 0);
     ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile);
 
     assertThat(scalaFile.getLanguage().getKey(), is(Scala.INSTANCE.getKey()));
@@ -62,7 +63,7 @@ public class ScalaFileTest {
 
   @Test
   public void shouldCreateScalaTestFileWithCorrectAttributes() {
-    InputFile inputFile = FileTestUtils.getInputFiles("/scalaFile/", "ScalaTestFile", 1).get(0);
+    InputFile inputFile = Iterables.get(FileTestUtils.getInputFiles("/scalaFile/", "ScalaTestFile", 1), 0);
     ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile, true);
 
     assertThat(scalaFile.getLanguage().getKey(), is(Scala.INSTANCE.getKey()));
@@ -74,7 +75,7 @@ public class ScalaFileTest {
 
   @Test
   public void shouldHandlePackeObjectsInFirstLevelProperly() {
-    InputFile inputFile = InputFileUtils.create(new File("src/test/resources/"), "scalaSourceImporter/package.scala");
+    InputFile inputFile = FileTestUtils.getInputFile(new File("src/test/resources/"), "scalaSourceImporter/package.scala", false);
     ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile, false);
 
     assertThat(scalaFile.getName(), is("scalaSourceImporter.package"));
@@ -90,15 +91,15 @@ public class ScalaFileTest {
   @Test
   public void shouldNotCreateScalaFileIfFileIsNull() {
     InputFile inputFile = mock(InputFile.class);
-    when(inputFile.getFile()).thenReturn(null);
+    when(inputFile.file()).thenReturn(null);
     assertNull(ScalaFile.fromInputFile(inputFile));
   }
 
   @Test
   public void shouldNotCreateScalaFileIfRelativePathIsNull() {
     InputFile inputFile = mock(InputFile.class);
-    when(inputFile.getFile()).thenReturn(new File(""));
-    when(inputFile.getRelativePath()).thenReturn(null);
+    when(inputFile.file()).thenReturn(new File(""));
+    when(inputFile.relativePath()).thenReturn(null);
     assertNull(ScalaFile.fromInputFile(inputFile));
   }
 }

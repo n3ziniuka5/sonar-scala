@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Phase;
 import org.sonar.api.batch.Phase.Name;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.resources.InputFile;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.language.ScalaFile;
 
@@ -50,21 +50,20 @@ public class ScalaSourceImporterSensor extends AbstractScalaSensor {
   }
 
   public void analyse(Project project, SensorContext sensorContext) {
-    ProjectFileSystem fileSystem = project.getFileSystem();
-    String charset = fileSystem.getSourceCharset().toString();
-
-    for (InputFile sourceFile : fileSystem.mainFiles(getScala().getKey())) {
+    String charset = fileSystem.encoding().toString();
+    FilePredicates p = fileSystem.predicates();
+    for (InputFile sourceFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey()), p.hasType(InputFile.Type.MAIN)))) {
       addFileToSonar(sensorContext, sourceFile, false, charset);
     }
 
-    for (InputFile testFile : fileSystem.testFiles(getScala().getKey())) {
+    for (InputFile testFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey()), p.hasType(InputFile.Type.TEST)))) {
       addFileToSonar(sensorContext, testFile, true, charset);
     }
   }
 
   private void addFileToSonar(SensorContext sensorContext, InputFile inputFile, boolean isUnitTest, String charset) {
     try {
-      String source = FileUtils.readFileToString(inputFile.getFile(), charset);
+      String source = FileUtils.readFileToString(inputFile.file(), charset);
       ScalaFile file = ScalaFile.fromInputFile(inputFile, isUnitTest);
 
       sensorContext.index(file);
@@ -78,7 +77,7 @@ public class ScalaSourceImporterSensor extends AbstractScalaSensor {
         }
       }
     } catch (IOException ioe) {
-      LOGGER.error("Could not read the file: " + inputFile.getFile().getAbsolutePath(), ioe);
+      LOGGER.error("Could not read the file: " + inputFile.file().getAbsolutePath(), ioe);
     }
   }
 

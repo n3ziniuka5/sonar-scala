@@ -22,8 +22,11 @@ package org.sonar.plugins.scala.util;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.resources.InputFile;
-import org.sonar.api.resources.InputFileUtils;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.language.ScalaFile;
 
 import java.io.File;
@@ -44,8 +47,35 @@ public final class FileTestUtils {
     // to prevent instantiation
   }
 
+  public static void addMainFiles(FileSystem fs, Iterable<InputFile> inputFiles) {
+    addFiles(fs, inputFiles, false);
+  }
+
+  public static void addTestFiles(FileSystem fs, Iterable<InputFile> inputFiles) {
+    addFiles(fs, inputFiles, true);
+  }
+
+  private static void addFiles(FileSystem fs, Iterable<InputFile> inputFiles, boolean testFile) {
+    if (! (fs instanceof DefaultFileSystem)) return;
+    if (inputFiles == null) return;
+    for (InputFile inputFile : inputFiles) {
+      if (! (inputFile instanceof DefaultInputFile)) continue;
+      ((DefaultInputFile) inputFile).setType(testFile ? InputFile.Type.TEST : InputFile.Type.MAIN);
+      ((DefaultFileSystem) fs).add(inputFile);
+    }
+  }
+
   public static String getRelativePath(String path) {
     return FileTestUtils.class.getResource(path).getFile();
+  }
+
+  public static InputFile getInputFile(File baseDir, String relativeFilePath, boolean testFile) {
+      String relativePath = baseDir.getPath() + '/' + relativeFilePath;
+      DefaultInputFile inputFile = new DefaultInputFile(relativePath);
+      inputFile.setAbsolutePath(baseDir.getAbsolutePath() + '/' + relativeFilePath);
+      inputFile.setLanguage(Scala.INSTANCE.getKey());
+      inputFile.setType(testFile ? InputFile.Type.TEST : InputFile.Type.MAIN);
+      return inputFile;
   }
 
   public static List<InputFile> getInputFiles(String path, String fileNameBase, int numberOfFiles) {
@@ -53,15 +83,20 @@ public final class FileTestUtils {
   }
 
   public static List<InputFile> getInputFiles(String path, String fileNameBase, String fileSuffix, int numberOfFiles) {
-    List<File> mainFiles = new ArrayList<File>();
-
+    List<InputFile> inputFiles = new ArrayList<InputFile>();
     URL resourceURL = FileTestUtils.class.getResource(path + fileNameBase + "1." + fileSuffix);
     for (int i = 1; resourceURL != null && i <= numberOfFiles; ) {
-      mainFiles.add(new File(resourceURL.getFile()));
+      String relativePath = path + fileNameBase + i + "." + fileSuffix;
+      if (relativePath.charAt(0) == '/') {
+          relativePath = relativePath.substring(1);
+      }
+      DefaultInputFile inputFile = new DefaultInputFile(relativePath);
+      inputFile.setAbsolutePath(resourceURL.getPath());
+      inputFile.setLanguage(fileSuffix);
+      inputFiles.add(inputFile);
       resourceURL = FileTestUtils.class.getResource(path + fileNameBase + (++i) + "." + fileSuffix);
     }
-
-    return InputFileUtils.create(new File(FileTestUtils.class.getResource(path).getFile()), mainFiles);
+    return inputFiles;
   }
 
   public static List<String> getContentOfFiles(String path, String fileNameBase, int numberOfFiles) throws IOException {

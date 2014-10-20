@@ -28,11 +28,11 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.resources.InputFile;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.scala.compiler.Lexer;
 import org.sonar.plugins.scala.language.Comment;
 import org.sonar.plugins.scala.language.Scala;
@@ -64,20 +64,20 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
   }
 
   public void analyse(Project project, SensorContext sensorContext) {
-    final ProjectFileSystem fileSystem = project.getFileSystem();
-    final String charset = fileSystem.getSourceCharset().toString();
+    final String charset = fileSystem.encoding().toString();
     final Set<ScalaPackage> packages = new HashSet<ScalaPackage>();
 
     MetricDistribution complexityOfClasses = null;
     MetricDistribution complexityOfFunctions = null;
 
-    for (InputFile inputFile : fileSystem.mainFiles(getScala().getKey())) {
+    FilePredicates p = fileSystem.predicates();
+    for (InputFile inputFile : fileSystem.inputFiles(p.and(p.hasLanguage(Scala.INSTANCE.getKey())))) {
       final ScalaFile scalaFile = ScalaFile.fromInputFile(inputFile);
       packages.add(scalaFile.getParent());
       sensorContext.saveMeasure(scalaFile, CoreMetrics.FILES, 1.0);
 
       try {
-        final String source = FileUtils.readFileToString(inputFile.getFile(), charset);
+        final String source = FileUtils.readFileToString(inputFile.file(), charset);
         final List<String> lines = StringUtils.convertStringToListOfLines(source);
         final List<Comment> comments = new Lexer().getComments(source);
 
@@ -96,7 +96,7 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
             ComplexityCalculator.measureComplexityOfFunctions(source));
 
       } catch (IOException ioe) {
-        LOGGER.error("Could not read the file: " + inputFile.getFile().getAbsolutePath(), ioe);
+        LOGGER.error("Could not read the file: " + inputFile.file().getAbsolutePath(), ioe);
       }
     }
 

@@ -28,17 +28,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.language.ScalaPackage;
 import org.sonar.plugins.scala.util.FileTestUtils;
@@ -49,20 +48,15 @@ public class BaseMetricsSensorTest {
 
   private BaseMetricsSensor baseMetricsSensor;
 
-  private ProjectFileSystem fileSystem;
+  private FileSystem fileSystem;
   private Project project;
   private SensorContext sensorContext;
 
   @Before
   public void setUp() {
-    baseMetricsSensor = new BaseMetricsSensor(mock(FileSystem.class), Scala.INSTANCE);
-
-    fileSystem = mock(ProjectFileSystem.class);
-    when(fileSystem.getSourceCharset()).thenReturn(Charset.defaultCharset());
-
+    fileSystem = new DefaultFileSystem();
+    baseMetricsSensor = new BaseMetricsSensor(fileSystem, Scala.INSTANCE);
     project = mock(Project.class);
-    when(project.getFileSystem()).thenReturn(fileSystem);
-
     sensorContext = mock(SensorContext.class);
   }
 
@@ -207,8 +201,7 @@ public class BaseMetricsSensorTest {
   }
 
   private void analyseScalaFiles(int numberOfFiles) {
-    when(fileSystem.mainFiles(baseMetricsSensor.getScala().getKey()))
-        .thenReturn(FileTestUtils.getInputFiles("/baseMetricsSensor/", "ScalaFile", numberOfFiles));
+    FileTestUtils.addMainFiles(fileSystem, FileTestUtils.getInputFiles("/baseMetricsSensor/", "ScalaFile", numberOfFiles));
     baseMetricsSensor.analyse(project, sensorContext);
   }
 }

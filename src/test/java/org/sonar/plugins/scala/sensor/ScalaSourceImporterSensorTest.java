@@ -24,17 +24,14 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.resources.InputFile;
-import org.sonar.api.resources.InputFileUtils;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.ProjectFileSystem;
-import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.util.FileTestUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,27 +43,22 @@ public class ScalaSourceImporterSensorTest {
 
   private ScalaSourceImporterSensor scalaSourceImporter;
 
-  private ProjectFileSystem fileSystem;
+  private FileSystem fileSystem;
   private Project project;
   private SensorContext sensorContext;
 
   @Before
   public void setUp() {
-    scalaSourceImporter = new ScalaSourceImporterSensor(mock(FileSystem.class), Scala.INSTANCE);
-
-    fileSystem = mock(ProjectFileSystem.class);
-    when(fileSystem.getSourceCharset()).thenReturn(Charset.defaultCharset());
-
+    fileSystem = new DefaultFileSystem();
+    scalaSourceImporter = new ScalaSourceImporterSensor(fileSystem, Scala.INSTANCE);
     project = mock(Project.class);
-    when(project.getFileSystem()).thenReturn(fileSystem);
-
     sensorContext = spy(new FakeSensorContext());
   }
 
+
   @Test
   public void shouldImportOnlyOneScalaFile() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(1));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    FileTestUtils.addMainFiles(fileSystem, getInputFiles(1));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -78,8 +70,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportOnlyOneScalaFileWithTheCorrectFileContent() throws IOException {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(1));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    FileTestUtils.addMainFiles(fileSystem, getInputFiles(1));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -92,8 +83,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaFiles() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(3));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    FileTestUtils.addMainFiles(fileSystem, getInputFiles(3));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -104,10 +94,8 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaFilesAndNotFilesOfOtherLanguages() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(3));
-    when(fileSystem.mainFiles(Java.KEY))
-        .thenReturn(FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaMainFile", "java", 1));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    FileTestUtils.addMainFiles(fileSystem, getInputFiles(3));
+    FileTestUtils.addMainFiles(fileSystem, FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaMainFile", "java", 1));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -118,8 +106,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaFilesWithTheCorrectFileContent() throws IOException {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getInputFiles(3));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    FileTestUtils.addMainFiles(fileSystem, getInputFiles(3));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -133,8 +120,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportOnlyOneScalaTestFile() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(1));
+    FileTestUtils.addTestFiles(fileSystem, getTestInputFiles(1));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -146,8 +132,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportOnlyOneScalaTestFileWithTheCorrectFileContent() throws IOException {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(1));
+    FileTestUtils.addTestFiles(fileSystem, getTestInputFiles(1));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -160,8 +145,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaTestFiles() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(3));
+    FileTestUtils.addTestFiles(fileSystem, getTestInputFiles(3));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -172,10 +156,8 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaTestFilesAndNotTestFilesOfOtherLanguages() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(Java.KEY))
-        .thenReturn(FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaTestFile", "java", 1));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(3));
+    FileTestUtils.addTestFiles(fileSystem, FileTestUtils.getInputFiles("/scalaSourceImporter/", "JavaTestFile", "java", 1));
+    FileTestUtils.addTestFiles(fileSystem, getTestInputFiles(3));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -186,8 +168,7 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllScalaTestFilesWithTheCorrectFileContent() throws IOException {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(getTestInputFiles(3));
+    FileTestUtils.addTestFiles(fileSystem, getTestInputFiles(3));
 
     scalaSourceImporter.analyse(project, sensorContext);
 
@@ -201,12 +182,15 @@ public class ScalaSourceImporterSensorTest {
 
   @Test
   public void shouldImportAllPackageObjects() {
-    when(fileSystem.mainFiles(scalaSourceImporter.getScala().getKey())).thenReturn(java.util.Arrays.asList(
-        InputFileUtils.create(new File("src/test/resources/"), "scalaSourceImporter/package.scala"),
-        InputFileUtils.create(new File("src/test/resources/"), "scalaSourceImporter/otherFolder/package.scala"),
-        InputFileUtils.create(new File("src/test/resources/"), "otherFolderForPackageObjectOnFirstLevel/package.scala")
-    ));
-    when(fileSystem.testFiles(scalaSourceImporter.getScala().getKey())).thenReturn(new ArrayList<InputFile>());
+    List<InputFile> files = new ArrayList<InputFile>();
+    File baseDir = new File("src/test/resources/");
+    for (String path : new String[] {"scalaSourceImporter/package.scala",
+                                     "scalaSourceImporter/otherFolder/package.scala",
+                                     "otherFolderForPackageObjectOnFirstLevel/package.scala"}) {
+      files.add(FileTestUtils.getInputFile(baseDir, path, false));
+    }
+
+    FileTestUtils.addMainFiles(fileSystem, files);
 
     scalaSourceImporter.analyse(project, sensorContext);
 
