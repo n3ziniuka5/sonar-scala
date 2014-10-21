@@ -150,7 +150,7 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
 
   private void computePackagesMetric(SensorContext sensorContext, Set<ScalaPackage> packages) {
     for (ScalaPackage currentPackage : packages) {
-      sensorContext.saveMeasure(currentPackage, CoreMetrics.PACKAGES, 1.0);
+      sensorContext.saveMeasure(currentPackage, CoreMetrics.DIRECTORIES, 1.0);
     }
   }
 

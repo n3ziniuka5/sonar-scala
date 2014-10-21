@@ -81,13 +81,13 @@ public class BaseMetricsSensorTest {
   @Test
   public void shouldIncrementPackageMetricForOneScalaFile() {
     analyseOneScalaFile();
-    verify(sensorContext).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.PACKAGES), eq(1.0));
+    verify(sensorContext).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.DIRECTORIES), eq(1.0));
   }
 
   @Test
   public void shouldIncreasePackageMetricForAllScalaFiles() {
     analyseAllScalaFiles();
-    verify(sensorContext, times(2)).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.PACKAGES), eq(1.0));
+    verify(sensorContext, times(2)).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.DIRECTORIES), eq(1.0));
   }
 
   @Test
