@@ -70,7 +70,7 @@ public class ScalaPackage extends Resource {
 
   @Override
   public String getQualifier() {
-    return Qualifiers.PACKAGE;
+    return Qualifiers.DIRECTORY;
   }
 
   @Override
