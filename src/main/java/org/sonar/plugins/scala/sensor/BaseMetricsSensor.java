@@ -32,6 +32,8 @@ import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoreMetrics;
+import org.sonar.api.measures.PersistenceMode;
+import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.plugins.scala.compiler.Lexer;
@@ -59,6 +61,7 @@ import org.sonar.plugins.scala.util.StringUtils;
 public class BaseMetricsSensor extends AbstractScalaSensor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BaseMetricsSensor.class);
+  private static final Number[] LIMITS_COMPLEXITY_FILES = {0, 5, 10, 20, 30, 60, 90};
 
   public BaseMetricsSensor(FileSystem fileSystem, Scala scala) {
     super(fileSystem, scala);
@@ -128,8 +131,11 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
         (double) StatementCounter.countStatements(source));
     sensorContext.saveMeasure(scalaFile, CoreMetrics.FUNCTIONS,
         (double) FunctionCounter.countFunctions(source));
-    sensorContext.saveMeasure(scalaFile, CoreMetrics.COMPLEXITY,
-        (double) ComplexityCalculator.measureComplexity(source));
+    double fileComplexity = (double) ComplexityCalculator.measureComplexity(source);
+    sensorContext.saveMeasure(scalaFile, CoreMetrics.COMPLEXITY, fileComplexity);
+
+    RangeDistributionBuilder fileComplexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, LIMITS_COMPLEXITY_FILES);
+    sensorContext.saveMeasure(scalaFile, fileComplexityDistribution.add(fileComplexity).build(true).setPersistenceMode(PersistenceMode.MEMORY));
   }
 
   private void addPublicApiMetrics(SensorContext sensorContext, ScalaFile scalaFile, String source) {
