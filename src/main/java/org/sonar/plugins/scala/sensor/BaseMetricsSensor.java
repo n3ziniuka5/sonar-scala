@@ -71,7 +71,6 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
     final String charset = fileSystem.encoding().toString();
     final Set<ScalaPackage> packages = new HashSet<ScalaPackage>();
 
-    MetricDistribution complexityOfClasses = null;
     MetricDistribution complexityOfFunctions = null;
 
     FilePredicates p = fileSystem.predicates();
@@ -93,9 +92,6 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
         addCodeMetrics(sensorContext, scalaFile, source);
         addPublicApiMetrics(sensorContext, scalaFile, source);
 
-        complexityOfClasses = sumUpMetricDistributions(complexityOfClasses,
-            ComplexityCalculator.measureComplexityOfClasses(source));
-
         complexityOfFunctions = sumUpMetricDistributions(complexityOfFunctions,
             ComplexityCalculator.measureComplexityOfFunctions(source));
 
@@ -103,9 +99,6 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
         LOGGER.error("Could not read the file: " + inputFile.file().getAbsolutePath(), ioe);
       }
     }
-
-    if (complexityOfClasses != null)
-      sensorContext.saveMeasure(complexityOfClasses.getMeasure());
 
     if (complexityOfFunctions != null)
       sensorContext.saveMeasure(complexityOfFunctions.getMeasure());

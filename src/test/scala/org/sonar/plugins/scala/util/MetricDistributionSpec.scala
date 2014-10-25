@@ -27,7 +27,7 @@ import org.sonar.api.measures.CoreMetrics
 @RunWith(classOf[JUnitRunner])
 class MetricDistributionSpec extends FlatSpec with ShouldMatchers {
 
-  val metric = CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION
+  val metric = CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION
   val ranges = Array[Number](1, 5, 10)
 
   "A metric distribution" should "increment occurence of value" in {

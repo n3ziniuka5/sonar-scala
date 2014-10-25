@@ -160,49 +160,4 @@ class ComplexityCalculatorSpec extends FlatSpec with ShouldMatchers {
     ComplexityCalculator.measureComplexityOfFunctions(source).getMeasure.getData should include ("2=1")
   }
 
-  it should "calculate complexity distribution of one class" in {
-    val source = """class A {
-        def inc(i: Int) = {
-          if (i == 0) {
-            i + 2
-          } else {
-            i + 1
-          }
-        }
-      }"""
-
-    ComplexityCalculator.measureComplexityOfClasses(source).getMeasure.getData should include ("0=1")
-  }
-
-  it should "calculate complexity distribution of two classes" in {
-    val source = """package abc
-      class A {
-        def inc(i: Int) = {
-          if (i == 0) {
-            i + 2
-          } else {
-            i + 1
-          }
-        }
-
-        def dec(i: Int) = i - 1
-      }
-
-      class B {
-        def inc(i: Int) = {
-          if (i == 0) {
-            i + 2
-          } else {
-            i + 1
-          }
-        }
-
-        def dec(i: Int) = i - 1
-        def dec2(i: Int) = i - 2
-        def dec3(i: Int) = i - 3
-      }"""
-
-    ComplexityCalculator.measureComplexityOfClasses(source).getMeasure.getData should include ("0=1")
-    ComplexityCalculator.measureComplexityOfClasses(source).getMeasure.getData should include ("5=1")
-  }
 }

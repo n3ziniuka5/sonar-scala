@@ -36,17 +36,11 @@ object ComplexityCalculator {
   import scalariform.lexer.Tokens._
   import scalariform.parser._
 
-  private lazy val classComplexityRanges = Array[Number](0, 5, 10, 20, 30, 60, 90)
   private lazy val functionComplexityRanges = Array[Number](1, 2, 4, 6, 8, 10, 12)
 
   def measureComplexity(source: String) : Int = ScalaParser.parse(source) match {
     case Some(ast) => measureComplexity(ast)
     case _ => 0
-  }
-
-  def measureComplexityOfClasses(source: String) : MetricDistribution = {
-    measureComplexityDistribution(source, CoreMetrics.CLASS_COMPLEXITY_DISTRIBUTION,
-        classComplexityRanges, classOf[TmplDef])
   }
 
   def measureComplexityOfFunctions(source: String) : MetricDistribution = {
