@@ -33,6 +33,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.resources.Project;
+import org.sonar.api.utils.ParsingUtils;
 import org.sonar.plugins.scala.compiler.Lexer;
 import org.sonar.plugins.scala.language.Comment;
 import org.sonar.plugins.scala.language.Scala;
@@ -132,10 +133,13 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
   }
 
   private void addPublicApiMetrics(SensorContext sensorContext, ScalaFile scalaFile, String source) {
-    sensorContext.saveMeasure(scalaFile, CoreMetrics.PUBLIC_API,
-        (double) PublicApiCounter.countPublicApi(source));
-    sensorContext.saveMeasure(scalaFile, CoreMetrics.PUBLIC_UNDOCUMENTED_API,
-        (double) PublicApiCounter.countUndocumentedPublicApi(source));
+    double documentedApi = (double) PublicApiCounter.countPublicApi(source);
+    double undocumentedApi = (double) PublicApiCounter.countUndocumentedPublicApi(source);
+    double publicApi = documentedApi + undocumentedApi;
+    double documentedApiDensity = (publicApi == 0 ? 100.0 : ParsingUtils.scaleValue(documentedApi / publicApi * 100, 2));
+    sensorContext.saveMeasure(scalaFile, CoreMetrics.PUBLIC_API, documentedApi);
+    sensorContext.saveMeasure(scalaFile, CoreMetrics.PUBLIC_DOCUMENTED_API_DENSITY, documentedApiDensity);
+    sensorContext.saveMeasure(scalaFile, CoreMetrics.PUBLIC_UNDOCUMENTED_API, undocumentedApi);
   }
 
   private MetricDistribution sumUpMetricDistributions(MetricDistribution oldDistribution,
