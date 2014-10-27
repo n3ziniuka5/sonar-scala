@@ -27,7 +27,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.plugins.scala.language.Scala;
-import org.sonar.plugins.scala.language.ScalaFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +37,8 @@ import java.util.List;
 
 public final class FileTestUtils {
 
-  public static final ScalaFile SCALA_SOURCE_FILE = new DummyScalaFile(false);
-  public static final ScalaFile SCALA_TEST_FILE = new DummyScalaFile(true);
+  public static final InputFile SCALA_SOURCE_FILE = new DummyScalaFile(false);
+  public static final InputFile SCALA_TEST_FILE = new DummyScalaFile(true);
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FileTestUtils.class);
 

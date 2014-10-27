@@ -41,7 +41,6 @@ import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.scala.language.Scala;
-import org.sonar.plugins.scala.language.ScalaPackage;
 import org.sonar.plugins.scala.util.FileTestUtils;
 
 public class BaseMetricsSensorTest {
@@ -78,18 +77,6 @@ public class BaseMetricsSensorTest {
   public void shouldMeasureNothingWhenNoFiles() {
     analyseScalaFiles(0);
     verifyNoMoreInteractions(sensorContext);
-  }
-
-  @Test
-  public void shouldIncrementPackageMetricForOneScalaFile() {
-    analyseOneScalaFile();
-    verify(sensorContext).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.DIRECTORIES), eq(1.0));
-  }
-
-  @Test
-  public void shouldIncreasePackageMetricForAllScalaFiles() {
-    analyseAllScalaFiles();
-    verify(sensorContext, times(2)).saveMeasure(any(ScalaPackage.class), eq(CoreMetrics.DIRECTORIES), eq(1.0));
   }
 
   @Test

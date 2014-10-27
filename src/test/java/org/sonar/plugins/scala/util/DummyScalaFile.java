@@ -19,20 +19,24 @@
  */
 package org.sonar.plugins.scala.util;
 
-import org.sonar.plugins.scala.language.ScalaFile;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
+import org.sonar.plugins.scala.language.Scala;
 
-public class DummyScalaFile extends ScalaFile {
+public class DummyScalaFile extends DefaultInputFile {
 
   public DummyScalaFile(boolean isUnitTest) {
-    super("", "", isUnitTest);
+      super("");
+      setLanguage(Scala.KEY);
+      setType(isUnitTest ? Type.TEST : Type.MAIN);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof ScalaFile)) {
+    if (!(obj instanceof InputFile)) {
       return false;
     }
-    ScalaFile other = (ScalaFile) obj;
-    return isUnitTest() == other.isUnitTest();
+    InputFile other = (InputFile) obj;
+    return (language() == Scala.KEY && type() == other.type());
   }
 }

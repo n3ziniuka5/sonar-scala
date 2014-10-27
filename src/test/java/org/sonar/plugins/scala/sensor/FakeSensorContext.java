@@ -46,15 +46,6 @@ import java.util.Set;
  */
 class FakeSensorContext implements SensorContext {
 
-  private final Set<Resource> resources = Sets.newHashSet();
-
-  public void saveSource(Resource reference, String source) {
-    if (resources.contains(reference)) {
-      throw new RuntimeException("Duplicate resources in sensor context are not allowed!");
-    }
-    resources.add(reference);
-  }
-
   @Deprecated
   public boolean index(Resource resource) { return false; }
 
@@ -159,6 +150,9 @@ class FakeSensorContext implements SensorContext {
   public Collection<Dependency> getOutgoingDependencies(Resource from) {
     return null;
   }
+
+  @Deprecated
+  public void saveSource(Resource reference, String source) { }
 
   @Override
   public void saveLink(ProjectLink link) { }
