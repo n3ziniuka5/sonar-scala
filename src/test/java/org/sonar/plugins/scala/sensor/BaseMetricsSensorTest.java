@@ -29,8 +29,10 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
@@ -135,6 +137,7 @@ public class BaseMetricsSensorTest {
     verifyMeasuring(CoreMetrics.STATEMENTS);
     verifyMeasuring(CoreMetrics.FUNCTIONS);
     verifyMeasuring(CoreMetrics.COMPLEXITY);
+    verifyMeasuringMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION);
   }
 
   @Test
@@ -144,6 +147,7 @@ public class BaseMetricsSensorTest {
     verifyMeasuring(CoreMetrics.STATEMENTS, NUMBER_OF_FILES);
     verifyMeasuring(CoreMetrics.FUNCTIONS, NUMBER_OF_FILES);
     verifyMeasuring(CoreMetrics.COMPLEXITY, NUMBER_OF_FILES);
+    verifyMeasuringMeasure(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, NUMBER_OF_FILES);
   }
 
   @Test
@@ -176,6 +180,17 @@ public class BaseMetricsSensorTest {
   private void verifyMeasuring(Metric metric, int numberOfCalls, double value) {
     verify(sensorContext, times(numberOfCalls)).saveMeasure(eq(FileTestUtils.SCALA_SOURCE_FILE),
         eq(metric), eq(value));
+  }
+
+  private void verifyMeasuringMeasure(Metric metric) {
+    verifyMeasuringMeasure(metric, 1);
+  }
+
+  private void verifyMeasuringMeasure(Metric metric, int numberOfCalls) {
+    ArgumentCaptor<Measure> argument = ArgumentCaptor.forClass(Measure.class);
+    verify(sensorContext, times(numberOfCalls)).saveMeasure(eq(FileTestUtils.SCALA_SOURCE_FILE),
+        argument.capture());
+    assertEquals(metric, argument.getValue().getMetric());
   }
 
   private void analyseOneScalaFile() {
