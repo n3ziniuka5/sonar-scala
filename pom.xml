@@ -46,7 +46,6 @@
     <scala.version>2.10.4</scala.version>
     <scala.major.version>2.10</scala.major.version>
 
-    <sonar-java.version>2.4</sonar-java.version>
     <sonar.language>scala</sonar.language>
   </properties>
 
@@ -76,11 +75,6 @@
           <artifactId>scala-library</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.sonar-plugins.java</groupId>
-      <artifactId>sonar-java-plugin</artifactId>
-      <version>${sonar-java.version}</version>
     </dependency>
 
     <!-- unit tests -->

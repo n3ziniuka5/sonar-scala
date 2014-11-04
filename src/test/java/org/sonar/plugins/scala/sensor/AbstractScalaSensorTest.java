@@ -33,7 +33,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.plugins.java.Java;
 import org.sonar.plugins.scala.language.Scala;
 import org.sonar.plugins.scala.util.FileTestUtils;
 
