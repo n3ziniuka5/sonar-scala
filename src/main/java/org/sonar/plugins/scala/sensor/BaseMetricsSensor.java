@@ -19,9 +19,6 @@
  */
 package org.sonar.plugins.scala.sensor;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +43,9 @@ import org.sonar.plugins.scala.metrics.StatementCounter;
 import org.sonar.plugins.scala.metrics.TypeCounter;
 import org.sonar.plugins.scala.util.MetricDistribution;
 import org.sonar.plugins.scala.util.StringUtils;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * This is the main sensor of the Scala plugin. It gathers all results
@@ -94,8 +94,6 @@ public class BaseMetricsSensor extends AbstractScalaSensor {
 
     if (complexityOfFunctions != null)
       sensorContext.saveMeasure(complexityOfFunctions.getMeasure());
-
-    LOGGER.debug("### done scala analyse");
   }
 
   private void addLineMetrics(SensorContext sensorContext, InputFile scalaFile, LinesAnalyzer linesAnalyzer) {
