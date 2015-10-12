@@ -1,0 +1,77 @@
+plugins {
+  id "com.iadams.sonar-packaging" version "0.1.1"
+}
+
+apply plugin: 'scala'
+
+sourceCompatibility = 1.8
+
+tasks.withType(ScalaCompile) {
+  scalaCompileOptions.useAnt = false
+}
+
+sourceSets {
+  main {
+    scala {
+      srcDirs = [
+        'src/main/scala',
+        'src/main/java'
+      ]
+    }
+    java {
+      srcDirs = []
+    }
+  }
+  test {
+    scala {
+      srcDirs = [
+        'src/test/scala',
+        'src/test/java'
+      ]
+    }
+    java {
+      srcDirs = []
+    }
+  }
+}
+
+sonarPackaging {
+  pluginKey = 'scala'
+  pluginClass = 'org.sonar.plugins.scala.ScalaPlugin'
+  pluginName = 'Scala'
+  pluginDescription = 'Scala language plugin for SonarQube'
+  /*pluginParent = null
+  pluginLicense = 'MIT'
+  requirePlugins = null
+  pluginUrl = 'http://mypluginwebsite.com'
+  pluginIssueTrackerUrl = 'http://mypluginwebsite.com/issues'
+  pluginTermsConditionsUrl = 'http://mypluginwebsite.com/terms'
+  pluginSourceUrl = 'http://github.com'*/
+  pluginDevelopers = 'Laurynas Tretjakovas'
+  /*skipDependenciesPackaging = false
+  useChildFirstClassLoader = false*/
+}
+
+ext {
+  scalaVersion = '2.11.7'
+  scalaBinVersion = '2.11'
+
+  sonarVersion = '5.1'
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile "org.scala-lang:scala-compiler:$scalaVersion"
+  compile "org.scala-lang:scala-library:$scalaVersion"
+  compile 'org.scalariform:scalariform_2.11:0.1.7'
+
+  provided 'org.slf4j:slf4j-api:1.7.12'
+  provided "org.codehaus.sonar:sonar-plugin-api:$sonarVersion"
+
+  testCompile "org.codehaus.sonar:sonar-testing-harness:$sonarVersion"
+  testCompile 'org.mockito:mockito-all:1.10.19'
+  testCompile "org.scalatest:scalatest_$scalaBinVersion:2.2.5"
+}

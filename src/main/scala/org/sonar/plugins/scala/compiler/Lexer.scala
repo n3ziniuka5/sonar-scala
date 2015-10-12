@@ -82,6 +82,7 @@ class Lexer {
         foundToken = token != 0
       }
 
+      /*
       override def foundComment(value: String, start: Int, end: Int) = {
         super.foundComment(value, start, end)
 
@@ -112,6 +113,7 @@ class Lexer {
         comments += new Comment(value, CommentType.DOC)
         lastDocCommentRange = Some(Range(start, end))
       }
+      */*/
     }
 
     scanner.init()
